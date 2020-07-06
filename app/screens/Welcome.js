@@ -15,12 +15,12 @@ import Menu from "./Menu";
 class Welcome extends PureComponent {
   state = {
     menu: [],
-    loading: true,
+    loading: false,
     pressStatus: false,
   };
   handleMenuStyle = () => {
     this.setState({ pressStatus: true });
-    console.log(this.state.pressStatus);
+    // console.log(this.state.pressStatus);
   };
   render() {
     return (
@@ -35,21 +35,25 @@ class Welcome extends PureComponent {
           tintColor="#ff9f00"
         />
         <Text style={styles.heading}>Hunger is Coming...</Text>
-        {this.state.pressStatus ? (
-          <Menu />
+        {this.state.loading ? (
+          this.state.pressStatus ? (
+            <Menu menu={this.state.menu} />
+          ) : (
+            <View style={styles.button}>
+              <Button
+                title="Menu"
+                onPress={this.handleMenuStyle}
+                color="#ff9f00"
+              />
+              <Text style={styles.menuShade}>|</Text>
+              <Text style={styles.menuShade}>|</Text>
+              <Text style={styles.menuShade}>|</Text>
+              <Text style={styles.menuShade}>|</Text>
+              <Text style={styles.menuShade}>V</Text>
+            </View>
+          )
         ) : (
-          <View style={styles.button}>
-            <Button
-              title="Menu"
-              onPress={this.handleMenuStyle}
-              color="#ff9f00"
-            />
-            <Text style={styles.menuShade}>|</Text>
-            <Text style={styles.menuShade}>|</Text>
-            <Text style={styles.menuShade}>|</Text>
-            <Text style={styles.menuShade}>|</Text>
-            <Text style={styles.menuShade}>V</Text>
-          </View>
+          <Text>Loading...</Text>
         )}
       </ImageBackground>
     );
@@ -60,7 +64,7 @@ class Welcome extends PureComponent {
     )
       .then((response) => response.json())
       .then((res) => {
-        this.setState({ menu: res });
+        this.setState({ menu: res, loading: true });
         //console.log(this.state.menu);
       })
       .catch((error) => {
